@@ -1,0 +1,30 @@
+name: Python CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout de wallet
+        uses: actions/checkout@v3
+
+      - name: Installer Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Installer les dépendances
+        run: |
+          pip install -r requirements.txt || true
+          pip install flake8
+
+      - name: Vérifier la qualité du code (flake8)
+        run: |
+          flake8 src --count --max-line-length=120
+
+      - name: Lancer les tests
+        run: python -m unittest discover
